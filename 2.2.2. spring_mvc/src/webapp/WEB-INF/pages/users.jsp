@@ -1,4 +1,5 @@
-<%--
+<%@ page import="web.model.User" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: Nikaria
   Date: 2/17/2021
@@ -12,6 +13,7 @@
     <title>Title</title>
 </head>
 <body>
+
 <h3>Users</h3>
 <table>
     <tr>
@@ -19,6 +21,7 @@
         <th>name</th>
         <th>year</th>
     </tr>
+
     <c:forEach var="user" items="${users}">
         <tr>
             <td>${user.id}</td>

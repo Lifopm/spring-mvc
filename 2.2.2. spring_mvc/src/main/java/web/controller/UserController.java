@@ -2,14 +2,11 @@ package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
 import web.service.UserService;
-import web.service.UserServiceImp;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,9 +33,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public ModelAndView editFilm(@ModelAttribute("user") User user) {
+    public ModelAndView editUser(@ModelAttribute("user") User user) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
+        modelAndView.setViewName("users");
         userService.edit(user);
         return modelAndView;
     }
@@ -51,19 +48,18 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ModelAndView addFilm(@ModelAttribute("film") User user) {
+    public ModelAndView addUser(@ModelAttribute("user") User user) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
+        modelAndView.setViewName("users");
         userService.add(user);
         return modelAndView;
     }
 
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteFilm(@PathVariable("id") int id) {
+    public ModelAndView deleteUser(@PathVariable("id") int id) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
-        User user = userService.getById(id);
-        userService.delete(user);
+        modelAndView.setViewName("users");
+        userService.delete(id);
         return modelAndView;
     }
 }

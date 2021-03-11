@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -32,12 +33,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable(); //- попробуйте выяснить сами, что это даёт
         http.authorizeRequests()
                 .antMatchers("/").permitAll() // доступность всем
-                .antMatchers("/add").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/edit/**").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/delete/**").access("hasAnyRole('ROLE_ADMIN')")
-                .antMatchers("/user").access("hasAnyRole('ROLE_USER')") // разрешаем входить на /user пользователям с ролью User
+                .antMatchers("/add").permitAll()//.access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/edit/**").permitAll()//.access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/delete/**").permitAll()//.access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/user").permitAll()//.access("hasAnyRole('ROLE_USER')") // разрешаем входить на /user пользователям с ролью User
                 .and().formLogin()  // Spring сам подставит свою логин форму
                 .successHandler(successUserHandler); // подключаем наш SuccessHandler для перенеправления по ролям
+
+
+        http.logout()
+                // разрешаем делать логаут всем
+                .permitAll()
+                // указываем URL логаута
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                // указываем URL при удачном логауте
+                .logoutSuccessUrl("/login?logout");
     }
 
     // Необходимо для шифрования паролей

@@ -1,6 +1,7 @@
 package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import web.model.User;
@@ -56,6 +57,17 @@ public class UserDaoImp<unchecked> implements UserDao {
       EntityManager entityManager = entityManagerFactory.createEntityManager();
       entityManager.getTransaction().begin();
       User user = entityManager.find(User.class, id);
+      entityManager.getTransaction().commit();
+      return user;
+   }
+
+   @Override
+   public User getUserByName(String s) {
+      EntityManager entityManager = entityManagerFactory.createEntityManager();
+      entityManager.getTransaction().begin();
+      User user = (User) entityManager.createQuery("SELECT e FROM User e where e.name = ?1")
+              .setParameter(1, s)
+              .getSingleResult();
       entityManager.getTransaction().commit();
       return user;
    }

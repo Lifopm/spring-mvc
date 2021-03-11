@@ -20,6 +20,8 @@
         <th>id</th>
         <th>name</th>
         <th>year</th>
+        <th>password</th>
+        <th>roles</th>
     </tr>
 
     <c:forEach var="user" items="${users}">
@@ -27,6 +29,8 @@
             <td>${user.id}</td>
             <td>${user.name}</td>
             <td>${user.age}</td>
+            <td>${user.password}</td>
+            <td>${user.roles}</td>
             <td>
                 <a href="/edit/${user.id}">edit</a>
                 <a href="/delete/${user.id}">delete</a>

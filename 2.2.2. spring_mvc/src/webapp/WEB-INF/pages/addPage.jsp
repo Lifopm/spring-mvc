@@ -15,10 +15,23 @@
 
 <c:url value="/add" var="var"/>
 <form action="${var}" method="POST">
+
     <label for="name">Name</label>
     <input type="text" name="name" id="name">
+
     <label for="age">Age</label>
     <input type="text" name="age" id="age">
+
+    <label for="password">Password</label>
+    <input type="text" name="password" id="password">
+
+    <label for="users_roles">Users_roles</label>
+    <input type="text" name="users_roles" id="users_roles">
+
+
+    <sec:authentication property="principal.authorities"/>
+
+
     <input type="submit" value="Add new user">
 </form>
 

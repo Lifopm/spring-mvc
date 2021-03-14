@@ -8,6 +8,9 @@ import web.model.Role;
 import web.model.User;
 import web.service.UserService;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -15,15 +18,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView allUsers() {
-        List<User> users = userService.allUsers();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("users");
-        modelAndView.addObject("users", users);
-        return modelAndView;
-    }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editPage(@PathVariable("id") int id) {
@@ -36,7 +30,7 @@ public class UserController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public ModelAndView editUser(@ModelAttribute("user") User user) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("users");
+        modelAndView.setViewName("adminPage");
         userService.edit(user);
         return modelAndView;
     }
@@ -49,9 +43,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ModelAndView addUser(@ModelAttribute("user") User user) {
+    public ModelAndView addUser(@ModelAttribute("user") User user, @RequestParam String roleId) {
+
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("users");
+        modelAndView.setViewName("adminPage");
+        Role role = new Role(roleId);
+        Collection roles = new ArrayList();
+        roles.add(role);
+        user.setRoles(roles);
         userService.add(user);
         return modelAndView;
     }
@@ -59,8 +58,38 @@ public class UserController {
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
     public ModelAndView deleteUser(@PathVariable("id") int id) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("users");
+        modelAndView.setViewName("adminPage");
         userService.delete(id);
         return modelAndView;
     }
+
+    @RequestMapping(value="/admin", method = RequestMethod.GET)
+    public ModelAndView adminView() {
+        List<User> users = userService.allUsers();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("adminPage");
+        modelAndView.addObject("users", users);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView Login() {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("login");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public ModelAndView userPage(Principal principal) {
+        User user = userService.getByName(principal.getName());
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("userPage");
+        modelAndView.addObject("user", user);
+
+        return modelAndView;
+    }
+
 }

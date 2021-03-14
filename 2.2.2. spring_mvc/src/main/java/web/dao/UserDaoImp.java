@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import web.model.Role;
 import web.model.User;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -19,7 +22,13 @@ public class UserDaoImp<unchecked> implements UserDao {
    @Transactional
    public List<User> allUsers() {
       EntityManager entityManager = entityManagerFactory.createEntityManager();
-      return entityManager.createQuery("SELECT e FROM User e").getResultList();
+      List<User> allUsers = entityManager.createQuery("SELECT e FROM User e").getResultList();
+//      Collection<Role> myList = allUsers.get(10).getRoles();
+//      Iterator<Role> iterator = myList.iterator();
+//      while (iterator.hasNext()) {
+//         System.out.println("getRole= " + iterator.next().getRole());
+//      }
+      return allUsers;
    }
 
    @Override
@@ -58,6 +67,7 @@ public class UserDaoImp<unchecked> implements UserDao {
       entityManager.getTransaction().begin();
       User user = entityManager.find(User.class, id);
       entityManager.getTransaction().commit();
+      entityManager.close();
       return user;
    }
 
@@ -65,10 +75,12 @@ public class UserDaoImp<unchecked> implements UserDao {
    public User getUserByName(String s) {
       EntityManager entityManager = entityManagerFactory.createEntityManager();
       entityManager.getTransaction().begin();
-      User user = (User) entityManager.createQuery("SELECT e FROM User e where e.name = ?1")
+      List<User> users = entityManager.createQuery("SELECT e FROM User e where e.name = ?1")
               .setParameter(1, s)
-              .getSingleResult();
+              .getResultList();
+              //.getSingleResult();
       entityManager.getTransaction().commit();
-      return user;
+      return users.get(0);
    }
+
 }

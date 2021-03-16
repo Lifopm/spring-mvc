@@ -7,15 +7,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
 
-<form th:action="@{/logout}" method="POST">
+<form:form action="/logout" method="POST">
     <input type="submit" value="Logout"/>
-</form>
+</form:form>
 
 <c:url value="/edit" var="var"/>
 <form action="${var}" method="POST">

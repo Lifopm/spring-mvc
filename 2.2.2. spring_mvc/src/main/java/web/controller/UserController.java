@@ -79,14 +79,6 @@ public class UserController {
         return modelAndView;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView Login() {
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
-    }
-
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ModelAndView userPage(Principal principal) {
         User user = userService.getByName(principal.getName());

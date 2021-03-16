@@ -1,15 +1,12 @@
 package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import web.model.Role;
+
 import web.model.User;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -23,11 +20,6 @@ public class UserDaoImp<unchecked> implements UserDao {
    public List<User> allUsers() {
       EntityManager entityManager = entityManagerFactory.createEntityManager();
       List<User> allUsers = entityManager.createQuery("SELECT e FROM User e").getResultList();
-//      Collection<Role> myList = allUsers.get(10).getRoles();
-//      Iterator<Role> iterator = myList.iterator();
-//      while (iterator.hasNext()) {
-//         System.out.println("getRole= " + iterator.next().getRole());
-//      }
       return allUsers;
    }
 
@@ -82,5 +74,4 @@ public class UserDaoImp<unchecked> implements UserDao {
       entityManager.getTransaction().commit();
       return users.get(0);
    }
-
 }

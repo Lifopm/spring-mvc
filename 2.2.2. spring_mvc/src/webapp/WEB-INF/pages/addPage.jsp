@@ -13,6 +13,10 @@
 </head>
 <body>
 
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Logout"/>
+</form>
+
 <c:url value="/add" var="var"/>
 <form action="${var}" method="POST">
 
@@ -29,10 +33,6 @@
         <option value="ROLE_ADMIN">ADMIN</option>
         <option value="ROLE_USER">USER</option>
     </select>
-
-
-    <sec:authentication property="principal.authorities"/>
-
 
     <input type="submit" value="Add new user">
 </form>

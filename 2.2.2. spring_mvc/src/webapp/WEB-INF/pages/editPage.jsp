@@ -13,6 +13,10 @@
 </head>
 <body>
 
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Logout"/>
+</form>
+
 <c:url value="/edit" var="var"/>
 <form action="${var}" method="POST">
     <input type="hidden" name="id" value="${user.id}">

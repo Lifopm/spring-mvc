@@ -14,6 +14,10 @@
 </head>
 <body>
 
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Logout"/>
+</form>
+
 <h3>Users</h3>
 <table>
     <tr>
@@ -30,7 +34,9 @@
             <td>${user.name}</td>
             <td>${user.age}</td>
             <td>${user.password}</td>
-            <td>${user.roles}</td>
+            <c:forEach var="role" items="${user.roles}">
+                <td>${role.role}</td>
+            </c:forEach>
             <td>
                 <a href="/edit/${user.id}">edit</a>
                 <a href="/delete/${user.id}">delete</a>

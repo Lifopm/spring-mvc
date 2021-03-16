@@ -45,13 +45,19 @@ public class UserController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ModelAndView addUser(@ModelAttribute("user") User user, @RequestParam String roleId) {
 
+        String[] sRoles = roleId.split(",");
+        Collection roles = new ArrayList();
+        for(int i = 0; i < sRoles.length; i++) {
+            Role role = new Role(sRoles[i]);
+            roles.add(role);
+        }
+
+        user.setRoles(roles);
+
+        userService.add(user);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("adminPage");
-        Role role = new Role(roleId);
-        Collection roles = new ArrayList();
-        roles.add(role);
-        user.setRoles(roles);
-        userService.add(user);
         return modelAndView;
     }
 

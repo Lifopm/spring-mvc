@@ -33,14 +33,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("User '%s' not found", s));
         }
 
-        Collection roles = mapRolesToAuthorities(user.getRoles());
-
-        return new org.springframework.security.core.userdetails.User(user.getName(),
+        org.springframework.security.core.userdetails.User forReturn = new org.springframework.security.core.userdetails.User(user.getName(),
                 user.getPassword(),
-                roles);
-    }
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
+                user.getRoles());
+        return forReturn;
     }
 }

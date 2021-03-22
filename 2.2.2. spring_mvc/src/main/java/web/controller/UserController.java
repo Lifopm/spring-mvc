@@ -28,7 +28,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public ModelAndView editUser(@ModelAttribute("user") User user) {
+    public ModelAndView editUser(@ModelAttribute("user") User user, @RequestParam String roleId) {
+
+        modifyUserRole(user, roleId);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("adminPage");
         userService.edit(user);
@@ -45,6 +48,16 @@ public class UserController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ModelAndView addUser(@ModelAttribute("user") User user, @RequestParam String roleId) {
 
+        modifyUserRole(user, roleId);
+
+        userService.add(user);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("adminPage");
+        return modelAndView;
+    }
+
+    private void modifyUserRole(User user, String roleId) {
         String[] sRoles = roleId.split(",");
         Collection roles = new ArrayList();
         for(int i = 0; i < sRoles.length; i++) {
@@ -54,11 +67,6 @@ public class UserController {
 
         user.setRoles(roles);
 
-        userService.add(user);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("adminPage");
-        return modelAndView;
     }
 
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)

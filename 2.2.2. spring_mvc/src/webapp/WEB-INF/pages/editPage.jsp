@@ -31,8 +31,10 @@
     <label for="password">Password</label>
     <input type="text" name="password" id="password">
 
-    <label for="users_roles">Users_roles</label>
-    <input type="text" name="users_roles" id="users_roles">
+    <select multiple name="roleId" size="2" id="roleId">
+        <option value="ROLE_ADMIN">ADMIN</option>
+        <option value="ROLE_USER">USER</option>
+    </select>
 
     <input type="submit" value="Edit user">
 </form>

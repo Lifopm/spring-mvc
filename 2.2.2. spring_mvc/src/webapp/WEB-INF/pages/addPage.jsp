@@ -30,7 +30,7 @@
     <label for="password">Password</label>
     <input type="text" name="password" id="password">
 
-    <select multiple name="roleId" size="2" id="roleId">
+    <select multiple name="roleId" size="2">
         <option value="ROLE_ADMIN">ADMIN</option>
         <option value="ROLE_USER">USER</option>
     </select>

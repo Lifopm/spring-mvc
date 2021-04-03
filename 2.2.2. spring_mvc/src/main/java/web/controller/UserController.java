@@ -19,6 +19,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(value="/", method = RequestMethod.GET)
+    public ModelAndView defaultView() {
+        List<User> users = userService.allUsers();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("adminPage");
+        modelAndView.addObject("users", users);
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/login", method = RequestMethod.GET)
+    public ModelAndView loginView() {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("login");
+
+        return modelAndView;
+    }
+
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editPage(@PathVariable("id") int id) {
         ModelAndView modelAndView = new ModelAndView();

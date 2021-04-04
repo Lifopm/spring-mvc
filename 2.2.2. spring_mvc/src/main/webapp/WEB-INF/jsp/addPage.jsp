@@ -13,8 +13,7 @@
     <title>Title</title>
 </head>
 <body>
-<h1>jsp</h1>
-
+<h1>jsp page WEB-INF</h1>
 <form:form action="/logout" method="POST">
     <input type="submit" value="Logout"/>
 </form:form>

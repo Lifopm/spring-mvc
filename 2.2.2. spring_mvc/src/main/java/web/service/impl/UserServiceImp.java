@@ -12,8 +12,12 @@ import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImp(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<User> allUsers() {
@@ -27,8 +31,6 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void delete(int id) {
-        //User user = getById(id);
-        //userRepository.delete(user);
         userRepository.deleteById(id);
     }
 

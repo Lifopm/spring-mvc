@@ -14,6 +14,7 @@
     <title>Title</title>
 </head>
 <body>
+<h1>jsp</h1>
 
 <form:form action="/logout" method="POST">
     <input type="submit" value="Logout"/>

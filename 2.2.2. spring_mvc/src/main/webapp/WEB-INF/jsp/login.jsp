@@ -18,7 +18,7 @@
     <title>Title</title>
 </head>
 <body>
-<h1>jsp</h1>
+<h1>jsp page WEB-INF</h1>
 <h1>Login</h1>
 <form name='f' action="login" method='POST'>
     <table>

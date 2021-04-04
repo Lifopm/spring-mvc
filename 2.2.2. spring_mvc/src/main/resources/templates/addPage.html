@@ -1,25 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Nikaria
-  Date: 2/17/2021
-  Time: 8:30 AM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<h1> page HTML</h1>
 
-<form:form action="/logout" method="POST">
+<form th:action="@{/logout}" method="post">
     <input type="submit" value="Logout"/>
-</form:form>
+</form>
 
-<c:url value="/add" var="var"/>
-<form action="${var}" method="POST">
+<form th:action="@{add}" method="post">
 
     <label for="name">Name</label>
     <input type="text" name="name" id="name">
@@ -36,6 +28,7 @@
     </select>
 
     <input type="submit" value="Add new user">
+
 </form>
 
 </body>

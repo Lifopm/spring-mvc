@@ -16,24 +16,29 @@ import java.util.List;
 @Controller
 public class UserController {
 
-    @Autowired
     private UserService userService;
 
-    @RequestMapping(value="/", method = RequestMethod.GET)
-    public ModelAndView defaultView() {
-        List<User> users = userService.allUsers();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("adminPage");
-        modelAndView.addObject("users", users);
-
-        return modelAndView;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @RequestMapping(value="/login", method = RequestMethod.GET)
+//    @RequestMapping(value="/", method = RequestMethod.GET)
+//    public ModelAndView defaultView() {
+//        List<User> users = userService.allUsers();
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("adminPage");
+//        modelAndView.addObject("users", users);
+//
+//        return modelAndView;
+//    }
+
+    //@RequestMapping(value="login", method = RequestMethod.GET)
+    @GetMapping({"/", "/login"})
     public ModelAndView loginView() {
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
+        modelAndView.setViewName("/login");
 
         return modelAndView;
     }
@@ -47,7 +52,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public ModelAndView editUser(@ModelAttribute("user") User user) {
+    public ModelAndView editUser(@ModelAttribute("user") User user, @RequestParam String roleId) {
+        modifyUserRole(user, roleId);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("adminPage");
         userService.edit(user);
@@ -63,15 +70,7 @@ public class UserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ModelAndView addUser(@ModelAttribute("user") User user, @RequestParam String roleId) {
-
-        String[] sRoles = roleId.split(",");
-        Collection roles = new ArrayList();
-        for(int i = 0; i < sRoles.length; i++) {
-            Role role = new Role(sRoles[i]);
-            roles.add(role);
-        }
-
-        user.setRoles(roles);
+        modifyUserRole(user, roleId);
 
         userService.add(user);
 
@@ -107,6 +106,18 @@ public class UserController {
         modelAndView.addObject("user", user);
 
         return modelAndView;
+    }
+
+    private void modifyUserRole(User user, String roleId) {
+        String[] sRoles = roleId.split(",");
+        Collection roles = new ArrayList();
+        for(int i = 0; i < sRoles.length; i++) {
+            Role role = new Role(sRoles[i]);
+            roles.add(role);
+        }
+
+        user.setRoles(roles);
+
     }
 
 }

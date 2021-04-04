@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1> page HTML</h1>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout"/>
+</form>
+
+<h3>Users</h3>
+<table>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>year</th>
+        <th>password</th>
+        <th>roles</th>
+    </tr>
+
+    <div th:each="user : ${users}">
+        <tr>
+            <td> <div th:text="${user.id}"></div></td>
+            <td> <div th:text="${user.name}"></div></td>
+            <td> <div th:text="${user.age}"></div></td>
+            <td> <div th:text="${user.password}"></div></td>
+            <div th:each="role : ${user.roles}">
+                <td><div th:text="${role.role}"></div></td>
+            </div>
+            <td>
+                <a th:href="@{/edit/{id}(id=${user.id})}">edit</a>
+                <a th:href="@{/delete/{id}(id=${user.id})}">delete</a>
+            </td>
+        </tr>
+    </div>
+</table>
+
+<h3>Add</h3>
+<a th:href="@{/add}">Add new user</a>
+</body>
+</html>

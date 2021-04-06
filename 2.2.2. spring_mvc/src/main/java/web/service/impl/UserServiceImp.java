@@ -2,7 +2,7 @@ package web.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import web.dao.UserRepository;
+import web.repository.UserRepository;
 import web.model.User;
 import web.service.UserService;
 
@@ -12,6 +12,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService {
 
+    // использование интерфейса, а не реализации
     private UserRepository userRepository;
 
     @Autowired

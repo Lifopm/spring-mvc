@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()  // Spring сам подставит свою логин форму
                 .loginPage("/login")
                 .permitAll()
+
                 .successHandler(successUserHandler) // подключаем наш SuccessHandler для перенеправления по ролям
                 .and().httpBasic();
         http.logout()

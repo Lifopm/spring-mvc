@@ -2,43 +2,61 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Admin panel</title>
 </head>
 <body>
-<h1> page HTML</h1>
+<h1>Admin panel</h1>
 
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Logout"/>
 </form>
 
 <h3>Users</h3>
-<table>
+<table class="table">
+    <thead>
     <tr>
         <th>id</th>
         <th>name</th>
         <th>year</th>
         <th>password</th>
         <th>roles</th>
+        <th> </th>
+        <th> </th>
+    </tr>
+    </thead>
+    <tbody class="table table-striped">
+
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.password}"></td>
+
+        <td><span th:each="role : ${user.roles}"><span th:text="${role.getShortRole()}" style="padding-right: 5px"></span></span> </td>
+
+        <td>
+            <button type="button" class="btn btn-info">Info</button>
+            <button type="button" class="btn btn-danger">Danger</button>
+            <a th:href="@{/edit/{id}(id=${user.id})}">edit</a>
+            <a th:href="@{/delete/{id}(id=${user.id})}">delete</a>
+        </td>
     </tr>
 
-    <div th:each="user : ${users}">
-        <tr>
-            <td> <div th:text="${user.id}"></div></td>
-            <td> <div th:text="${user.name}"></div></td>
-            <td> <div th:text="${user.age}"></div></td>
-            <td> <div th:text="${user.password}"></div></td>
-            <div th:each="role : ${user.roles}">
-                <td><div th:text="${role.role}"></div></td>
-            </div>
-            <td>
-                <a th:href="@{/edit/{id}(id=${user.id})}">edit</a>
-                <a th:href="@{/delete/{id}(id=${user.id})}">delete</a>
-            </td>
-        </tr>
-    </div>
+    </tbody>
 </table>
 
 <h3>Add</h3>
 <a th:href="@{/add}">Add new user</a>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 </body>
 </html>

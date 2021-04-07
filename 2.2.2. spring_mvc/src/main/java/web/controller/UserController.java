@@ -46,7 +46,7 @@ public class UserController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public ModelAndView editPage(@PathVariable("id") int id) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("editPage");
+        modelAndView.setViewName("adminPage");
         modelAndView.addObject("user", userService.getById(id));
         return modelAndView;
     }
@@ -82,9 +82,7 @@ public class UserController {
     }
 
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteUser(@PathVariable("id") int id) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("adminPage");
+    public ModelAndView deleteUser(ModelAndView modelAndView, @PathVariable("id") int id) {
         userService.delete(id);
         List<User> users = userService.allUsers();
         modelAndView.addObject("users", users);

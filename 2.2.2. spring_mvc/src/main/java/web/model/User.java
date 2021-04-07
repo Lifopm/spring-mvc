@@ -21,8 +21,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "lastName")
+    private String lastName;
+
+    @Column(name = "email", unique = true)
+    private String email;
 
     @Column(name = "age")
     private int age;
@@ -35,6 +41,22 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

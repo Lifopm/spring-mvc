@@ -12,7 +12,6 @@ import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService {
 
-    // использование интерфейса, а не реализации
     private UserRepository userRepository;
 
     @Autowired
@@ -34,22 +33,6 @@ public class UserServiceImp implements UserService {
     public void delete(int id) {
         userRepository.deleteById(id);
     }
-
-    @Override
-    public void edit(User user) {
-        userRepository.save(user);
-    }
-
-    @Override
-    public User getById(int id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        return optionalUser.get();
-    }
-
-//    @Override
-//    public User getByName(String name) {
-//        return userRepository.findByName(name);
-//    }
 
     @Override
     public User getByEmail(String email) {

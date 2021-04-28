@@ -1,6 +1,8 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Controller
+@RestController
 public class UserController {
 
     private UserService userService;
@@ -32,23 +34,21 @@ public class UserController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ModelAndView addUser(@ModelAttribute("user") User user, @RequestParam String roleId) {
+    @PostMapping(value = "/add")
+    public ResponseEntity<?> addUser(@RequestBody User user, @RequestParam String roleId) {
         modifyUserRole(user, roleId);
         userService.add(user);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin");
-        return modelAndView;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value="/delete/{id}")
     public ModelAndView deleteUser(ModelAndView modelAndView, @PathVariable("id") int id) {
         userService.delete(id);
         modelAndView.setViewName("redirect:/admin");
         return modelAndView;
     }
 
-    @RequestMapping(value="/admin", method = RequestMethod.GET)
+    @GetMapping(value="/admin")
     public ModelAndView adminView(Principal principal) {
         List<User> users = userService.allUsers();
         ModelAndView modelAndView = new ModelAndView();
@@ -59,7 +59,7 @@ public class UserController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @GetMapping(value = "/user")
     public ModelAndView userPage(Principal principal) {
         User user = userService.getByEmail(principal.getName());
 
@@ -81,5 +81,4 @@ public class UserController {
         user.setRoles(roles);
 
     }
-
 }

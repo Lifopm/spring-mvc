@@ -130,16 +130,8 @@
                             <th>Role</th>
                         </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td th:text="${currentuser.id}"></td>
-                                <td th:text="${currentuser.name}"></td>
-                                <td th:text="${currentuser.lastName}"></td>
-                                <td th:text="${currentuser.age}"></td>
-                                <td th:text="${currentuser.email}"></td>
-                                <td><span th:each="role : ${currentuser.roles}"><span th:text="${role.getShortRole()}" style="padding-right: 5px"></span></span> </td>
+                        <tbody id="js_user_info_table">
 
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -261,6 +253,62 @@
 
 <script>
 
+    //функция добавления пользователя в таблицу
+    function addUserToTable(user, tableName) {
+        var tableRef = document.getElementById(tableName);
+        var newRow = tableRef.insertRow(tableRef.rows.length);
+        newRow.setAttribute("id","js_edit_" + user.id);
+
+        var newCell = newRow.insertCell(0);
+        var newText = document.createTextNode(user.id);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(1);
+        var newText = document.createTextNode(user.name);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(2);
+        var newText = document.createTextNode(user.lastName);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(3);
+        var newText = document.createTextNode(user.age);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(4);
+        var newText = document.createTextNode(user.email);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(5);
+        for (var j = 0; j < user.roles.length; j++) {
+            var newText = document.createTextNode(user.roles[j].shortRole + " ");
+            newCell.appendChild(newText);
+        }
+
+        if("jstable" == tableName) {
+            var newCell = newRow.insertCell(6);
+            var a = document.createElement('a');
+            var linkText = document.createTextNode("Edit");
+            a.appendChild(linkText);
+            a.classList.add("btn", "btn-info", "text-light");
+            a.setAttribute("data-toggle", "modal");
+            a.setAttribute("data-target", "#js_modal_edit");
+            a.setAttribute("data-id", user.id);
+            newCell.appendChild(a);
+
+            var newCell = newRow.insertCell(7);
+            var a = document.createElement('a');
+            var linkText = document.createTextNode("Delete");
+            a.appendChild(linkText);
+            a.classList.add("btn", "btn-danger", "text-light");
+            a.setAttribute("data-toggle", "modal");
+            a.setAttribute("data-target", "#js_modal_delete");
+            a.setAttribute("data-id", user.id);
+            newCell.appendChild(a);
+        }
+    }
+
+    // событие удаления пользователя из таблицы
     document.getElementById('js_form_delete').addEventListener('submit', function (e) {
 
         e.preventDefault();
@@ -282,7 +330,7 @@
         $('#js_close_delete').click();
     });
 
-
+    // событие редактирования пользователя в таблице
     document.getElementById('js_form_edit').addEventListener('submit', function (e) {
 
         e.preventDefault();
@@ -308,25 +356,37 @@
                 'Content-Type': 'application/json'
             }
         })
+            .then(response=>response.json())
+            .then(user=>{
+                // обновление данных в таблице с использованием ответа сервера
+                $('#js_edit_' + user.id).find("td:nth-child(2)").html(user.name);
+                $('#js_edit_' + user.id).find("td:nth-child(3)").html(user.lastName);
+                $('#js_edit_' + user.id).find("td:nth-child(4)").html(user.age);
+                $('#js_edit_' + user.id).find("td:nth-child(5)").html(user.email);
+                let rolesEdit ="";
+                for (var j = 0; j < user.roles.length; j++) {
+                    rolesEdit += user.roles[j].shortRole + " ";
+                }
+                $('#js_edit_' + user.id).find("td:nth-child(6)").html(rolesEdit);
+
+                // обновление данных в таблице без использования ответа сервера
+                // $('#js_edit_' + object["id"]).find("td:nth-child(2)").html(object["name"]);
+                // $('#js_edit_' + object["id"]).find("td:nth-child(3)").html(object["lastName"]);
+                // $('#js_edit_' + object["id"]).find("td:nth-child(4)").html(object["age"]);
+                // $('#js_edit_' + object["id"]).find("td:nth-child(5)").html(object["email"]);
+                // let rolesEdit ="";
+                // for (let i = 0; i < object["roles"].length; i++) {
+                //     rolesEdit += object["roles"][i].role.substring(5, object["roles"][i].role.length) + " ";
+                // }
+                // $('#js_edit_' + object["id"]).find("td:nth-child(6)").html(rolesEdit);
+            })
             .catch(err => {
                 console.error('Error: ', err);
             });
-
-        // занесение данных в таблицу
-        $('#js_edit_' + object["id"]).find("td:nth-child(2)").html(object["name"]);
-        $('#js_edit_' + object["id"]).find("td:nth-child(3)").html(object["lastName"]);
-        $('#js_edit_' + object["id"]).find("td:nth-child(4)").html(object["age"]);
-        $('#js_edit_' + object["id"]).find("td:nth-child(5)").html(object["email"]);
-        let rolesEdit ="";
-        for (let i = 0; i < object["roles"].length; i++) {
-            rolesEdit += object["roles"][i].role.substring(5, object["roles"][i].role.length) + " ";
-        }
-        $('#js_edit_' + object["id"]).find("td:nth-child(6)").html(rolesEdit);
-
         $('#js_close_edit').click();
-
     });
 
+    // добавление пользователя в таблицу
     document.getElementById('js_form_add').addEventListener('submit', function (e) {
 
         e.preventDefault();
@@ -345,23 +405,45 @@
         object["roles"] = roles;
         var json = JSON.stringify(object);
 
-        fetch("http://localhost:8080/add", {
+        var newUser = fetch("http://localhost:8080/add", {
             method: 'post',
             body: json,
             headers: {
                 'Content-Type': 'application/json'
             }
         })
+            .then(response=>response.json())
+            .then(user=>{
+                addUserToTable(user, "jstable");
+            })
             .catch(err => {
                 console.error('Error: ', err);
             });
 
+        //показать вкладку с таблицей
         var someTabTriggerEl = document.querySelector('#admin-tab')
         var tab = new bootstrap.Tab(someTabTriggerEl)
         tab.show();
+
     });
 
-    //событие на открытое модальное окно
+    // показать информацию о пользователе
+    $('#v-pills-user-tab').click(function () {
+        const urlCurrentUser = 'http://localhost:8080/current';
+        fetch(urlCurrentUser)
+            .then(res => res.json())
+            .then(currentUser => {
+                var userInformationPageTable = document.getElementById("js_user_info_table");
+
+                $(userInformationPageTable).empty();
+                addUserToTable(currentUser, "js_user_info_table");
+            })
+            .catch(err => {
+                console.error('Error: ', err);
+            });
+    })
+
+    //событие на открытие модального окна удаления пользователя
     $('#js_modal_delete').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = button.data('id') // Extract info from data-* attributes
@@ -384,7 +466,7 @@
             });
     })
 
-    //событие на открытое модальное окно
+    //событие на открытие модального окна редактирования пользователя
     $('#js_modal_edit').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = button.data('id') // Extract info from data-* attributes
@@ -408,8 +490,8 @@
             });
     })
 
+    // заполняем таблицу и заголовок при стартовой загрузке страницы
     $(document).ready(function() {
-
         // добавляем в заголовок email и добавляем роли
         const urlCurrentUser = 'http://localhost:8080/current';
         fetch(urlCurrentUser)
@@ -433,73 +515,21 @@
             });
 
         // заполнение таблицы
-        var tableRef = document.getElementById("jstable");
         const urlUsers = 'http://localhost:8080/users';
 
         fetch(urlUsers)
             .then(res => res.json())
             .then(data => {
                 data.map((user) => {
-                    var newRow = tableRef.insertRow(tableRef.rows.length);
-                    newRow.setAttribute("id","js_edit_" + user.id);
-
-                    var newCell = newRow.insertCell(0);
-                    var newText = document.createTextNode(user.id);
-                    newCell.appendChild(newText);
-
-                    var newCell = newRow.insertCell(1);
-                    var newText = document.createTextNode(user.name);
-                    newCell.appendChild(newText);
-
-                    var newCell = newRow.insertCell(2);
-                    var newText = document.createTextNode(user.lastName);
-                    newCell.appendChild(newText);
-
-                    var newCell = newRow.insertCell(3);
-                    var newText = document.createTextNode(user.age);
-                    newCell.appendChild(newText);
-
-                    var newCell = newRow.insertCell(4);
-                    var newText = document.createTextNode(user.email);
-                    newCell.appendChild(newText);
-
-                    var newCell = newRow.insertCell(5);
-                    for (var j = 0; j < user.roles.length; j++) {
-                        var newText = document.createTextNode(user.roles[j].shortRole + " ");
-                        newCell.appendChild(newText);
-                    }
-
-                    var newCell = newRow.insertCell(6);
-                    var a = document.createElement('a');
-                    var linkText = document.createTextNode("Edit");
-                    a.appendChild(linkText);
-                    a.classList.add("btn","btn-info","text-light");
-                    a.setAttribute("data-toggle", "modal");
-                    a.setAttribute("data-target", "#js_modal_edit");
-                    a.setAttribute("data-id", user.id);
-                    newCell.appendChild(a);
-
-                    var newCell = newRow.insertCell(7);
-                    var a = document.createElement('a');
-                    var linkText = document.createTextNode("Delete");
-                    a.appendChild(linkText);
-                    a.classList.add("btn","btn-danger","text-light");
-                    a.setAttribute("data-toggle", "modal");
-                    a.setAttribute("data-target", "#js_modal_delete");
-                    a.setAttribute("data-id", user.id);
-                    newCell.appendChild(a);
+                    addUserToTable(user, "jstable");
                 });
             })
             .catch(err => {
                 console.error('Error: ', err);
             });
-
         });
-
 
 </script>
 
 </body>
 </html>
-
-

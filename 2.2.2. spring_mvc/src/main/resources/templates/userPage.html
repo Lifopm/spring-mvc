@@ -12,10 +12,8 @@
 <body>
 
 <nav class="navbar text-light bg-dark" style="margin-bottom:1%">
-    <div class="col-11">
-        <span th:text="${user.email}"></span>
+    <div class="col-11"  id="jsheader">
         <span style="padding-left: 5px; padding-right: 5px;">with roles:</span>
-        <span th:each="role : ${user.roles}"><span th:text="${role.getShortRole()}" style="padding-right: 5px"></span></span>
     </div>
     <div class="col-1">
         <a th:href="@{/logout}" class="float-right text-muted">Logout</a>
@@ -47,16 +45,8 @@
                             <th>Role</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td th:text="${user.id}"></td>
-                            <td th:text="${user.name}"></td>
-                            <td th:text="${user.lastName}"></td>
-                            <td th:text="${user.age}"></td>
-                            <td th:text="${user.email}"></td>
-                            <td><span th:each="role : ${user.roles}"><span th:text="${role.getShortRole()}" style="padding-right: 5px"></span></span> </td>
+                        <tbody id="js_user_info_table">
 
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -69,6 +59,73 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+
+
+    $(document).ready(function() {
+        // добавляем в заголовок email и добавляем роли
+        const urlCurrentUser = 'http://localhost:8080/current';
+        fetch(urlCurrentUser)
+            .then(res => res.json())
+            .then(currentUser => {
+                // заполенение заголовка
+                var header = document.getElementById("jsheader");
+                var spanEmail = document.createElement('span');
+                spanEmail.innerHTML = currentUser.email;
+                header.insertBefore(spanEmail, header.firstChild);
+
+                for(var i = 0; i < currentUser.roles.length; i++) {
+                    var spanRoles = document.createElement('span');
+                    spanRoles.innerHTML = currentUser.roles[i].shortRole;
+                    spanRoles.setAttribute("style", "padding-right: 5px;");
+                    header.appendChild(spanRoles);
+                }
+
+                // заполнение таблицы
+                var userInformationPageTable = document.getElementById("js_user_info_table");
+                $(userInformationPageTable).empty();
+                addUserToTable(currentUser, "js_user_info_table");
+            })
+            .catch(err => {
+                console.error('Error: ', err);
+            });
+    });
+
+    //функция добавления пользователя в таблицу
+    function addUserToTable(user, tableName) {
+        var tableRef = document.getElementById(tableName);
+        var newRow = tableRef.insertRow(tableRef.rows.length);
+        newRow.setAttribute("id","js_edit_" + user.id);
+
+        var newCell = newRow.insertCell(0);
+        var newText = document.createTextNode(user.id);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(1);
+        var newText = document.createTextNode(user.name);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(2);
+        var newText = document.createTextNode(user.lastName);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(3);
+        var newText = document.createTextNode(user.age);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(4);
+        var newText = document.createTextNode(user.email);
+        newCell.appendChild(newText);
+
+        var newCell = newRow.insertCell(5);
+        for (var j = 0; j < user.roles.length; j++) {
+            var newText = document.createTextNode(user.roles[j].shortRole + " ");
+            newCell.appendChild(newText);
+        }
+    }
+</script>
+
 
 </body>
 </html>

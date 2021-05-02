@@ -3,7 +3,6 @@ package web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import web.model.Role;
@@ -35,9 +34,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addUser(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         userService.add(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return user;
     }
 
     @DeleteMapping(value="/delete/{id}")
@@ -89,9 +88,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/users/{id}")
-    public ResponseEntity<?>  EdiUser(@RequestBody User user, @PathVariable("id") int id) {
+    public User EdiUser(@RequestBody User user, @PathVariable("id") int id) {
         userService.add(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        User user2 = userService.findById(user.getId());
+        return user2;
     }
 
     @RequestMapping(value = "/users")

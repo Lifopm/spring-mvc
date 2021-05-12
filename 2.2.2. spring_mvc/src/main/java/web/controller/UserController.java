@@ -1,20 +1,16 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import web.model.Role;
 import web.model.User;
 import web.service.UserService;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-@RestController
+@Controller
 public class UserController {
 
     private UserService userService;
@@ -33,21 +29,9 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping(value = "/add")
-    public User addUser(@RequestBody User user) {
-        userService.add(user);
-        return user;
-    }
-
-    @DeleteMapping(value="/delete/{id}")
-    public ResponseEntity<?> deleteUser(ModelAndView modelAndView, @PathVariable("id") int id) {
-        userService.delete(id);
-        modelAndView.setViewName("redirect:/admin");
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping(value="/admin")
     public ModelAndView adminView(Principal principal) {
+
         List<User> users = userService.allUsers();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("adminPage");
@@ -66,45 +50,5 @@ public class UserController {
         modelAndView.addObject("user", user);
 
         return modelAndView;
-    }
-
-    private void modifyUserRole(User user, String roleId) {
-        String[] sRoles = roleId.split(",");
-        Collection roles = new ArrayList();
-        for(int i = 0; i < sRoles.length; i++) {
-            Role role = new Role(sRoles[i]);
-            roles.add(role);
-        }
-
-        user.setRoles(roles);
-
-    }
-
-    @GetMapping(value = "/users/{id}")
-    public User getUser(@PathVariable("id") int id) {
-        User user = userService.findById(id);
-
-        return user;
-    }
-
-    @PostMapping(value = "/users/{id}")
-    public User EdiUser(@RequestBody User user, @PathVariable("id") int id) {
-        userService.add(user);
-        User user2 = userService.findById(user.getId());
-        return user2;
-    }
-
-    @RequestMapping(value = "/users")
-    public List<User> getAllUsers(Principal principal) {
-        List<User> users = userService.allUsers();
-
-        return users;
-    }
-
-    @RequestMapping(value = "/current")
-    public User getCurrentUser(Principal principal) {
-        User user = userService.getByEmail(principal.getName());
-
-        return user;
     }
 }

@@ -350,7 +350,7 @@
         var json = JSON.stringify(object);
 
         fetch("http://localhost:8080/users/" + object["id"], {
-            method: 'post',
+            method: 'put',
             body: json,
             headers: {
                 'Content-Type': 'application/json'

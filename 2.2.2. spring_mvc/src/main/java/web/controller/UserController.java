@@ -23,17 +23,6 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @RequestMapping(value="/", method = RequestMethod.GET)
-//    public ModelAndView defaultView() {
-//        List<User> users = userService.allUsers();
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("adminPage");
-//        modelAndView.addObject("users", users);
-//
-//        return modelAndView;
-//    }
-
-    //@RequestMapping(value="login", method = RequestMethod.GET)
     @GetMapping({"/", "/login"})
     public ModelAndView loginView() {
 

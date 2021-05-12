@@ -108,5 +108,4 @@ public class UserController {
         user.setRoles(roles);
 
     }
-
 }

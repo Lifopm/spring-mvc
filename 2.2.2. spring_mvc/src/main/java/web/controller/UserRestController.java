@@ -21,7 +21,7 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/current")
+    @RequestMapping(value = "/users/current")
     public User getCurrentUser(Principal principal) {
         User user = userService.getByEmail(principal.getName());
         return user;
@@ -39,7 +39,7 @@ public class UserRestController {
         return user;
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping(value = "/add") // /user
     public User addUser(@RequestBody User user) {
         userService.add(user);
         return user;
